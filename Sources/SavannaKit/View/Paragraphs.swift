@@ -59,8 +59,9 @@ func generateParagraphs(for textView: InnerTextView, flipRects: Bool = false) ->
 		i += 1
 		
 		let rect = textView.paragraphRectForRange(range: paragraphRange)
+		let firstRect = textView.paragraphRectForRange(range: NSMakeRange(paragraphRange.lowerBound, 0))
 		
-		let paragraph = Paragraph(rect: rect, number: i)
+		let paragraph = Paragraph(rect: rect, firstLineRect: firstRect, number: i)
 		paragraphs.append(paragraph)
 		
 	}
@@ -90,7 +91,7 @@ func generateParagraphs(for textView: InnerTextView, flipRects: Bool = false) ->
 		
 		
 		i += 1
-		let endParagraph = Paragraph(rect: rect, number: i)
+		let endParagraph = Paragraph(rect: rect, firstLineRect: rect, number: i)
 		paragraphs.append(endParagraph)
 		
 	}
@@ -145,7 +146,7 @@ func offsetParagraphs(_ paragraphs: [Paragraph], for textView: InnerTextView, yO
 
 func drawLineNumbers(_ paragraphs: [Paragraph], in rect: CGRect, for textView: InnerTextView) {
 	
-	guard let style = textView.theme?.lineNumbersStyle else {
+	guard let style = textView.theme?.lineNumbersStyle, let gutter = textView.theme?.gutterStyle else {
 		return
 	}
 	
@@ -163,18 +164,10 @@ func drawLineNumbers(_ paragraphs: [Paragraph], in rect: CGRect, for textView: I
 		
 		let drawSize = attr.size()
 		
-		drawRect.origin.x = gutterWidth - drawSize.width - 4
-		
-		#if os(macOS)
-//			drawRect.origin.y += (drawRect.height - drawSize.height) / 2.0
-		#else
-			//			drawRect.origin.y += 22 - drawSize.height
-		#endif
+		drawRect.origin.x = gutterWidth - drawSize.width - gutter.gutterMargin
+		drawRect.origin.y += (paragraph.firstLineRect.height - style.font.ascender) / 2.0
 		drawRect.size.width = drawSize.width
 		drawRect.size.height = drawSize.height
-
-//		Color.red.withAlphaComponent(0.4).setFill()
-//		paragraph.rect.fill()
 		
 		attr.draw(in: drawRect)
 		

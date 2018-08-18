@@ -30,9 +30,13 @@ public struct GutterStyle {
 	/// regardless of any line numbers.
 	public let minimumWidth: CGFloat
 	
-	public init(backgroundColor: Color, minimumWidth: CGFloat) {
+	/// Specifies how far from the gutter divider line the line numbers are drawn (right margin), default is 4pt.
+	public let gutterMargin: CGFloat
+	
+	public init(backgroundColor: Color, minimumWidth: CGFloat, gutterMargin: CGFloat = 4) {
 		self.backgroundColor = backgroundColor
 		self.minimumWidth = minimumWidth
+		self.gutterMargin = gutterMargin
 	}
 }
 
