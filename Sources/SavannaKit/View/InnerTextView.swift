@@ -143,34 +143,4 @@ class InnerTextView: TextView {
 			
 		}
 	}
-//	var gutterWidth: CGFloat = 0.0 {
-//		didSet {
-//
-//			textContainer.exclusionPaths = [UIBezierPath(rect: CGRect(x: 0.0, y: 0.0, width: gutterWidth, height: .greatestFiniteMagnitude))]
-//
-//		}
-//
-//	}
-	
-	#if os(iOS)
-	
-	override func caretRect(for position: UITextPosition) -> CGRect {
-		
-		var superRect = super.caretRect(for: position)
-		
-		guard let theme = theme else {
-			return superRect
-		}
-		
-		let font = theme.font
-		
-		// "descender" is expressed as a negative value,
-		// so to add its height you must subtract its value
-		superRect.size.height = font.pointSize - font.descender
-		
-		return superRect
-	}
-	
-	#endif
-	
 }
